@@ -494,9 +494,24 @@ function! s:sort_buffers(...)
 endfunction
 
 function! fzf#vim#buffers(...)
-  let bufs = map(sort(s:buflisted(), 's:sort_buffers'), 's:format_buffer(v:val)')
-  return s:fzf('buffers', fzf#vim#wrap({
-  \ 'source':  reverse(bufs),
+  let buffers = []
+
+  for num in range(1, bufnr('$'))
+    " If the buffer exists and is not an unnamed buffer
+    if buflisted(num) && len(bufname(num)) > 0
+      call add(buffers, num)
+    endif
+  endfor
+
+  call sort(buffers, 's:sort_buffers')
+
+  let formatted_buffers = []
+  for buf in buffers
+    call add(formatted_buffers, s:format_buffer(buf))
+  endfor
+
+  return s:fzf(fzf#vim#wrap({
+  \ 'source':  reverse(formatted_buffers),
   \ 'sink*':   s:function('s:bufopen'),
   \ 'options': '+m -x --tiebreak=index --ansi -d "\t" -n 2,1..2 --prompt="Buf> "',
   \}), a:000)
