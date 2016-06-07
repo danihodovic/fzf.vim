@@ -497,8 +497,8 @@ function! fzf#vim#buffers(...)
   let buffers = []
 
   for num in range(1, bufnr('$'))
-    " If the buffer exists and is not an unnamed buffer
-    if buflisted(num) && len(bufname(num)) > 0
+    " If the buffer exists, is not an unnamed buffer and is not the current buffer use it
+    if buflisted(num) && len(bufname(num)) > 0 && num != bufnr('')
       call add(buffers, num)
     endif
   endfor
