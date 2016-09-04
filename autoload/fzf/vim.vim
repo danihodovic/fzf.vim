@@ -510,7 +510,7 @@ function! fzf#vim#buffers(...)
     call add(formatted_buffers, s:format_buffer(buf))
   endfor
 
-  return s:fzf(fzf#vim#wrap({
+  return s:fzf('buffers', fzf#vim#wrap({
   \ 'source':  reverse(formatted_buffers),
   \ 'sink*':   s:function('s:bufopen'),
   \ 'options': '+m -x --tiebreak=index --ansi -d "\t" -n 2,1..2 --prompt="Buf> "',
